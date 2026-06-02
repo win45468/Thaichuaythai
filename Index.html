@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ไทยช่วยไทย พลัส (60/40) - Thai Chuay Thai Plus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f8fafc;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300247d' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .active-tab {
+            border-bottom: 4px solid #ed1c24;
+            color: #00247d;
+            font-weight: 700;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'thai-blue': '#00247d',
+                        'thai-blue-light': '#0a38a8',
+                        'thai-red': '#ed1c24',
+                        'thai-red-dark': '#c41219',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- ส่วนเนื้อหาหลัก -->
+    <main class="flex-grow flex items-center justify-center p-4 py-8">
+        <div class="w-full max-w-lg">
+            
+            <!-- การ์ดแอปพลิเคชันหลัก -->
+            <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 relative">
+                
+                <!-- ปุ่มสลับภาษา TH / EN (Floating Language Switcher) -->
+                <div class="absolute top-4 right-4 z-20 flex gap-1 bg-white/20 backdrop-blur-md p-1 rounded-full border border-white/30 shadow-sm">
+                    <button onclick="setLanguage('th')" id="lang-th" class="px-3 py-1 text-xs font-bold rounded-full transition-all bg-thai-red text-white shadow-sm">
+                        TH
+                    </button>
+                    <button onclick="setLanguage('en')" id="lang-en" class="px-3 py-1 text-xs font-bold rounded-full transition-all text-white hover:bg-white/10">
+                        EN
+                    </button>
+                </div>
+
+                <!-- ส่วนหัว (Header) โลโก้โครงการ -->
+                <div class="bg-gradient-to-r from-thai-blue to-thai-blue-light p-6 text-center relative overflow-hidden flex flex-col items-center justify-center">
+                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-28 h-28 bg-white opacity-10 rounded-full blur-2xl pointer-events-none"></div>
+                    <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-24 h-24 bg-white opacity-10 rounded-full blur-2xl pointer-events-none"></div>
+                    
+                    <!-- โลโก้โครงการอย่างเป็นทางการ -->
+                    <img src="https://www.xn--b3czb2arbbzn9a6eulf7c.th/assets/img/tct_logo.png" 
+                         alt="โลโก้ ไทยช่วยไทย" 
+                         class="h-24 w-auto object-contain drop-shadow-lg mb-3 z-10"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'80\' viewBox=\'0 0 200 80\'%3E%3Crect width=\'200\' height=\'80\' fill=\'%2300247d\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'sans-serif\' font-size=\'24\' fill=\'%23ffffff\'%3Eไทยช่วยไทย%3C/text%3E%3C/svg%3E';">
+                    
+                    <div id="sub-title" class="inline-block bg-thai-red text-white text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full shadow-md z-10">
+                        โครงการไทยช่วยไทย พลัส (60/40)
+                    </div>
+                </div>
+
+                <!-- แท็บเมนูสลับหน้าจอ (Navigation Tabs) -->
+                <div class="flex border-b border-gray-200 bg-gray-50">
+                    <button onclick="switchTab('calc-tab')" id="btn-calc" class="flex-1 py-4 text-center font-semibold text-gray-500 hover:text-thai-blue border-b-4 border-transparent transition-all active-tab flex justify-center items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        <span id="tab-calc-text">คำนวณสิทธิ์</span>
+                    </button>
+                    <button onclick="switchTab('info-tab')" id="btn-info" class="flex-1 py-4 text-center font-semibold text-gray-500 hover:text-thai-blue border-b-4 border-transparent transition-all flex justify-center items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span id="tab-info-text">ข้อมูลโครงการ</span>
+                    </button>
+                </div>
+
+                <!-- ส่วนเนื้อหาแท็บต่างๆ -->
+                <div class="p-6 sm:p-8">
+
+                    <!-- ================= TAB 1: เครื่องคำนวณ ================= -->
+                    <div id="calc-tab" class="space-y-5">
+                        
+                        <!-- สรุปเงื่อนไขสิทธิ์ย่อในหน้าคำนวณ -->
+                        <div class="bg-blue-50 rounded-2xl p-4 border border-blue-100 flex items-center gap-3">
+                            <div class="bg-thai-blue text-white p-2 rounded-full shadow-sm flex-shrink-0">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                            </div>
+                            <div id="quick-terms" class="text-xs sm:text-sm text-gray-700 leading-tight">
+                                <strong class="text-thai-blue">สิทธิ์ร่วมจ่าย 60/40:</strong> ภาครัฐช่วยจ่าย 60% ประชาชนจ่ายเอง 40% จำกัดสูงสุดไม่เกิน <strong class="text-thai-red">200 บาท/วัน</strong> และไม่เกิน 1,000 บาท/เดือน
+                            </div>
+                        </div>
+
+                        <!-- แจ้งเตือนข้อผิดพลาด -->
+                        <div id="errorBox" class="hidden bg-red-100 border-l-4 border-thai-red text-red-700 p-4 rounded-xl text-sm font-medium" role="alert"></div>
+
+                        <!-- ราคาสินค้า -->
+                        <div>
+                            <label id="label-price" class="block text-gray-700 text-sm font-semibold mb-2" for="price">
+                                ราคาสินค้าหรือบริการจริง (บาท)
+                            </label>
+                            <div class="relative">
+                                <input class="shadow-sm appearance-none border border-gray-300 rounded-xl w-full py-3 px-4 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-thai-blue focus:border-transparent text-xl font-bold text-right transition-all" id="price" type="number" placeholder="0.00" min="0" step="0.01">
+                                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <span class="text-gray-400 font-semibold text-lg">฿</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ตัวเลือกจำลองสิทธิ์ขั้นสูง -->
+                        <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 space-y-4">
+                            <h3 id="label-advanced" class="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                การจำลองสิทธิ์ความละเอียดสูง
+                            </h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div>
+                                    <label id="label-limit" class="block text-gray-600 text-xs font-semibold mb-1" for="limit">สิทธิ์รัฐจ่ายสูงสุด/วัน (บาท)</label>
+                                    <input class="shadow-sm border border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 text-sm font-semibold text-right focus:ring-1 focus:ring-thai-blue focus:outline-none" id="limit" type="number" value="200" min="0">
+                                </div>
+                                <div>
+                                    <label id="label-monthly-limit" class="block text-gray-600 text-xs font-semibold mb-1" for="monthly-limit">สิทธิ์เดือนนี้เหลืออยู่ (บาท)</label>
+                                    <input class="shadow-sm border border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 text-sm font-semibold text-right focus:ring-1 focus:ring-thai-blue focus:outline-none" id="monthly-limit" type="number" value="1000" min="0" max="1000">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ปุ่มกดคำนวณ -->
+                        <button onclick="calculate()" id="btn-calculate" class="w-full bg-thai-red hover:bg-thai-red-dark active:scale-[0.98] text-white font-bold py-3.5 px-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-150 flex justify-center items-center gap-2 text-lg">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            <span>คำนวณยอดชำระ</span>
+                        </button>
+
+                        <!-- แบนเนอร์ประชาสัมพันธ์โครงการ -->
+                        <div class="overflow-hidden rounded-2xl border border-gray-100 shadow-sm bg-gray-50">
+                            <img src="https://www.xn--b3czb2arbbzn9a6eulf7c.th/assets/banner/Mer_final_mb.png" 
+                                 alt="แบนเนอร์ ประชาสัมพันธ์โครงการ" 
+                                 class="w-full h-auto object-contain block"
+                                 onerror="this.style.display='none';">
+                        </div>
+
+                        <!-- ส่วนแสดงผลลัพธ์คำนวณ (ซ่อนไว้เป็นเริ่มต้น) -->
+                        <div id="result" class="hidden space-y-4 pt-2">
+                            <div class="relative">
+                                <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                                    <div class="w-full border-t border-gray-200"></div>
+                                </div>
+                                <div class="relative flex justify-center">
+                                    <span id="result-divider" class="px-3 bg-white text-xs font-bold text-gray-500 uppercase tracking-wider">ผลลัพธ์การจัดสรรสิทธิ์ 60/40</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-3xl p-6 shadow-inner space-y-4">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex flex-col">
+                                        <span id="label-userPays" class="text-gray-800 font-bold text-base sm:text-lg">ประชาชนจ่ายเอง (40%)</span>
+                                        <span id="sub-userPays" class="text-xs text-gray-500">ยอดเงินที่ผู้ใช้สิทธิ์ต้องแสกนจ่ายจริง</span>
+                                    </div>
+                                    <span class="text-3xl font-extrabold text-thai-blue" id="userPays">0.00</span>
+                                </div>
+                                
+                                <hr class="border-blue-200">
+
+                                <div class="flex justify-between items-center">
+                                    <div class="flex flex-col">
+                                        <span id="label-govPays" class="text-gray-700 font-medium">ภาครัฐร่วมจ่ายสมทบ (60%)</span>
+                                        <span id="sub-govPays" class="text-xs text-gray-500">สิทธิ์ที่หักลดโดยรัฐบาล</span>
+                                    </div>
+                                    <span class="text-2xl font-bold text-thai-red" id="govPays">0.00</span>
+                                </div>
+
+                                <!-- สรุปความคงเหลือของวงเงินรายเดือน -->
+                                <div id="monthlyStatusBlock" class="hidden text-xs bg-white/80 p-3 rounded-xl border border-blue-100 flex flex-col gap-1 text-gray-600">
+                                    <div class="flex justify-between font-semibold text-gray-700">
+                                        <span id="label-monthlyRemain">สิทธิ์รายเดือนหลังหักรายการนี้:</span>
+                                        <span id="monthlyRemain">0.00 ฿</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2 mt-1 overflow-hidden">
+                                        <div id="monthlyBar" class="bg-thai-blue h-2 rounded-full transition-all" style="width: 100%"></div>
+                                    </div>
+                                </div>
+
+                                <!-- คำเตือนสิทธิ์ชนเพดานรายวัน -->
+                                <div id="limitWarning" class="hidden text-xs bg-amber-50 text-amber-800 border border-amber-200 px-4 py-3 rounded-xl flex items-start gap-2">
+                                    <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                    <span id="text-limit-warn">เนื่องจากส่วนต่างรัฐจ่าย 60% เกินโควตารายวัน ระบบจึงจำกัดสิทธิ์รัฐช่วยจ่ายไว้ที่ขีดจำกัดสูงสุด และให้ผู้รับสิทธิจ่ายราคาส่วนต่างที่เหลือเอง</span>
+                                </div>
+
+                                <!-- คำเตือนสิทธิ์ชนเพดานรายเดือน -->
+                                <div id="monthlyWarning" class="hidden text-xs bg-red-50 text-red-800 border border-red-200 px-4 py-3 rounded-xl flex items-start gap-2">
+                                    <svg class="w-4 h-4 flex-shrink-0 mt-0.5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                    <span id="text-monthly-warn">วงเงินสิทธิ์รายเดือนคงเหลือของคุณมีไม่เพียงพอสำหรับการหักสิทธิ์เต็มโควตา ระบบได้ช่วยจ่ายเท่าสิทธิ์รายเดือนที่เหลือของคุณทั้งหมดแล้ว</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- ================= TAB 2: ข้อมูลโครงการอย่างเป็นทางการ ================= -->
+                    <div id="info-tab" class="hidden space-y-6 text-sm leading-relaxed text-gray-700">
+                        
+                        <!-- สรุปสิทธิ์หลัก -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 text-center">
+                                <span id="info-summary-gov-label" class="text-xs text-gray-500 font-medium block mb-1">ภาครัฐร่วมจ่ายสมทบ</span>
+                                <span class="text-3xl font-bold text-thai-blue block">60%</span>
+                                <span id="info-summary-gov-sub" class="text-[10px] text-gray-400">สูงสุด 200 บ./วัน</span>
+                            </div>
+                            <div class="bg-red-50 border border-red-100 rounded-2xl p-4 text-center">
+                                <span id="info-summary-user-label" class="text-xs text-gray-500 font-medium block mb-1">ผู้ได้รับสิทธิจ่ายเอง</span>
+                                <span class="text-3xl font-bold text-thai-red block">40%</span>
+                                <span id="info-summary-user-sub" class="text-[10px] text-gray-400">ผ่านแอปฯ เป๋าตัง</span>
+                            </div>
+                        </div>
+
+                        <!-- คัดกรองคุณสมบัติผู้มีสิทธิ์ (Interactive Checklist) -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 space-y-3">
+                            <h4 id="info-eligibility-title" class="font-bold text-gray-800 flex items-center gap-1.5">
+                                <svg class="w-5 h-5 text-thai-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                คุณสมบัติผู้เข้าร่วมโครงการ (สำหรับประชาชน)
+                            </h4>
+                            <div class="space-y-2 text-xs">
+                                <label class="flex items-start gap-2.5 cursor-pointer">
+                                    <input type="checkbox" class="mt-0.5 rounded border-gray-300 text-thai-blue focus:ring-thai-blue" checked disabled>
+                                    <span id="eligible-1" class="text-gray-600">มีสัญชาติไทย</span>
+                                </label>
+                                <label class="flex items-start gap-2.5 cursor-pointer">
+                                    <input type="checkbox" class="mt-0.5 rounded border-gray-300 text-thai-blue focus:ring-thai-blue" checked disabled>
+                                    <span id="eligible-2" class="text-gray-600">อายุตั้งแต่ 18 ปีบริบูรณ์ขึ้นไป ณ วันลงทะเบียน</span>
+                                </label>
+                                <label class="flex items-start gap-2.5 cursor-pointer">
+                                    <input type="checkbox" class="mt-0.5 rounded border-gray-300 text-thai-blue focus:ring-thai-blue" checked disabled>
+                                    <span id="eligible-3" class="text-gray-600">มีบัตรประจำตัวประชาชน</span>
+                                </label>
+                                <label class="flex items-start gap-2.5 cursor-pointer">
+                                    <input type="checkbox" class="mt-0.5 rounded border-gray-300 text-thai-blue focus:ring-thai-blue" checked disabled>
+                                    <span id="eligible-4" class="text-gray-600">ไม่เป็นผู้ถูกระงับสิทธิ์/เรียกคืนโครงการรัฐในอดีต (เช่น คนละครึ่ง ทุกเฟส)</span>
+                                </label>
+                                <label class="flex items-start gap-2.5 cursor-pointer">
+                                    <input type="checkbox" class="mt-0.5 rounded border-gray-300 text-thai-blue focus:ring-thai-blue" checked disabled>
+                                    <span id="eligible-5" class="text-gray-600">ไม่เป็นผู้มีบัตรสวัสดิการแห่งรัฐ (ณ วันที่ 18 พฤษภาคม 2569)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- ระยะเวลาโครงการ -->
+                        <div class="border-l-4 border-thai-blue pl-4 py-1">
+                            <h3 id="info-period-title" class="font-bold text-thai-blue text-base">ระยะเวลากลุ่มเป้าหมายโครงการ</h3>
+                            <p id="info-period-sub" class="text-xs font-semibold text-gray-500">ตั้งแต่วันที่ 25 พฤษภาคม ถึงวันที่ 30 กันยายน 2569</p>
+                        </div>
+                        <ul class="space-y-3">
+                            <li class="flex gap-2">
+                                <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                <div>
+                                    <strong id="info-reg-citizen">ลงทะเบียนประชาชน:</strong> 
+                                    <span id="info-reg-citizen-val">ลงทะเบียนผ่านแอปฯ เป๋าตัง วันที่ 25 - 29 พ.ค. 2569 เวลา 06:00 - 22:00 น. (จนกว่าจะครบ 30 ล้านสิทธิ์ หรือถึงวันปิดระบบ) และต้องลงทะเบียนสมัครบริการ G-Wallet ก่อนเริ่มใช้งาน</span>
+                                </div>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <div>
+                                    <strong id="info-spend-period">ช่วงเวลาใช้สิทธิ์ (ร้านค้าทั่วไป):</strong> 
+                                    <span id="info-spend-period-val">สแกนชำระผ่าน G-Wallet แอปฯ เป๋าตัง ได้ตั้งแต่วันที่ 1 มิ.ย. - 30 ก.ย. 2569 (06:00 - 23:00 น.) ของทุกวัน</span>
+                                </div>
+                            </li>
+                            <li class="flex gap-2">
+                                <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                                <div>
+                                    <strong id="info-delivery">การใช้สิทธิ์ฟู้ดเดลิเวอรี:</strong> 
+                                    <span id="info-delivery-val">สั่งผ่านพาร์ทเนอร์เดลิเวอรีที่กำหนด (Grab, LINE MAN, Robinhood, ShopeeFood) บนแอปฯ เป๋าตัง ได้ตั้งแต่วันที่ 15 มิ.ย. - 30 ก.ย. 2569 (06:00 - 21:00 น.)</span>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <!-- วัตถุประสงค์ -->
+                        <div class="bg-gray-50 rounded-2xl p-5 border border-gray-100 space-y-2">
+                            <h4 id="info-objective-title" class="font-bold text-gray-800 flex items-center gap-1.5">
+                                <svg class="w-5 h-5 text-thai-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                วัตถุประสงค์โครงการ
+                            </h4>
+                            <p id="info-objective-desc" class="text-xs text-gray-600 leading-relaxed font-light">
+                                เพื่อช่วยเหลือประชาชนซึ่งได้รับผลกระทบจากสถานการณ์วิกฤตด้านพลังงานจากสถานการณ์ความขัดแย้งในภูมิภาคตะวันออกกลาง บรรเทาภาระค่าใช้จ่ายและรักษากำลังซื้อของประชาชน รวมถึงช่วยกระตุ้นรายได้ให้แก่ผู้ประกอบการร้านค้าขนาดเล็ก และผู้ค้ากลุ่มวิสาหกิจชุมชน (SMEs) ไทยอย่างต่อเนื่อง
+                            </p>
+                        </div>
+
+                        <!-- เงื่อนไขสำคัญ -->
+                        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 text-xs text-amber-900 space-y-2">
+                            <h4 id="info-conditions-title" class="font-bold text-amber-800 flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                เงื่อนไขสำคัญและการร่วมจ่าย
+                            </h4>
+                            <ul class="list-disc pl-5 space-y-1 font-light">
+                                <li id="cond-1">ต้องมีการซื้อสินค้าหรือบริการจริงตรงตามมูลค่าที่แสดงในบิลเท่านั้น (Face-to-Face)</li>
+                                <li id="cond-2">ไม่อนุญาตให้ถอนเงินสด หรือรับแลกเปลี่ยนสินค้า/บริการคืนกลับมาเป็นเงินสด ไม่ว่าในกรณีใดๆ</li>
+                                <li id="cond-3">ภาครัฐจะสนับสนุนเงินร่วมจ่ายเฉพาะค่าอาหารและเครื่องดื่มเท่านั้น (ไม่รวมค่าจัดส่งของเดลิเวอรี)</li>
+                            </ul>
+                        </div>
+
+                        <!-- สินค้าต้องห้าม -->
+                        <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4 text-xs text-rose-900 space-y-2">
+                            <h4 id="info-banned-title" class="font-bold text-rose-800 flex items-center gap-1">
+                                <svg class="w-4 h-4 text-rose-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                                รายการสินค้าและบริการยกเว้น (ไม่รวมในสิทธิ์ร่วมจ่าย)
+                            </h4>
+                            <p id="info-banned-desc" class="leading-relaxed font-light">
+                                สิทธิ์ร่วมจ่ายจะไม่รวมถึง: สลากกินแบ่งรัฐบาล, เครื่องดื่มแอลกอฮอล์ทุกประเภท, ยาสูบ/ยาสูบทางเลือก, บัตรกำนัลทุกแบบ (Gift Voucher / Gift Card), บัตรเงินสด (Cash Card) และบริการชำระเงินล่วงหน้า (Prepaid) ทุกประเภท
+                            </p>
+                        </div>
+
+                        <!-- ข้อมูลติดต่อ (Contact Us) -->
+                        <div class="bg-slate-100 border border-slate-200 rounded-2xl p-5 space-y-2.5 text-xs text-gray-700">
+                            <h4 id="info-contact-title" class="font-bold text-gray-800 flex items-center gap-1.5">
+                                <svg class="w-5 h-5 text-thai-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                ติดต่อสอบถามรายละเอียดโครงการ
+                            </h4>
+                            <p class="font-light"><strong id="contact-source">แหล่งที่มาอย่างเป็นทางการ:</strong> <a href="https://www.xn--b3czb2arbbzn9a6eulf7c.th/" target="_blank" class="text-thai-blue font-semibold underline hover:text-thai-blue-light">www.ไทยช่วยไทย.th</a></p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2 pt-2 border-t border-gray-200">
+                                <div class="flex flex-col">
+                                    <span id="contact-phone" class="font-bold text-gray-600">เบอร์โทรศัพท์ติดต่อ:</span>
+                                    <span class="text-thai-blue font-medium text-xs sm:text-sm">02-111-1122, 02-109-2345</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span id="contact-email" class="font-bold text-gray-600">อีเมลสอบถาม:</span>
+                                    <span class="text-thai-blue font-medium text-xs sm:text-sm">thaihelpplus60-40@fpo.go.th</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ส่วนท้าย (Footer) คุณดนุเดช -->
+    <footer class="bg-white border-t border-gray-200 mt-auto py-6">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-500 text-xs leading-relaxed font-light">
+                พัฒนาโดย ด.ช.ดนุเดช - 22 ถนนบุญเรืองฤทธิ์ ตำบลหายยา<br>
+                อำเภอเมือง จังหวัดเชียงใหม่ 50100<br>
+                ©2026 Danudet. All Rights Reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- ส่วนสคริปต์ควบคุมการทำงานคำนวณและสลับภาษา -->
+    <script>
+        // ข้อมูลพจนานุกรมสองภาษา (Localization Dictionary)
+        const translations = {
+            th: {
+                subTitle: "โครงการไทยช่วยไทย พลัส (60/40)",
+                tabCalc: "คำนวณสิทธิ์",
+                tabInfo: "ข้อมูลโครงการ",
+                quickTerms: "<strong class='text-thai-blue'>สิทธิ์ร่วมจ่าย 60/40:</strong> ภาครัฐช่วยจ่าย 60% ประชาชนจ่ายเอง 40% จำกัดสูงสุดไม่เกิน <strong class='text-thai-red'>200 บาท/วัน</strong> และไม่เกิน 1,000 บาท/เดือน",
+                labelPrice: "ราคาสินค้าหรือบริการจริง (บาท)",
+                labelAdvanced: "การจำลองสิทธิ์ความละเอียดสูง",
+                labelLimit: "สิทธิ์รัฐจ่ายสูงสุด/วัน (บาท)",
+                labelMonthlyLimit: "สิทธิ์เดือนนี้เหลืออยู่ (บาท)",
+                btnCalculate: "คำนวณยอดชำระ",
+                resultDivider: "ผลลัพธ์การจัดสรรสิทธิ์ 60/40",
+                labelUserPays: "ประชาชนจ่ายเอง (40%)",
+                subUserPays: "ยอดเงินที่ผู้ใช้สิทธิ์ต้องแสกนจ่ายจริง",
+                labelGovPays: "ภาครัฐร่วมจ่ายสมทบ (60%)",
+                subGovPays: "สิทธิ์ที่หักลดโดยรัฐบาล",
+                labelMonthlyRemain: "สิทธิ์รายเดือนหลังหักรายการนี้:",
+                textLimitWarn: "เนื่องจากส่วนต่างรัฐจ่าย 60% เกินโควตารายวัน ระบบจึงจำกัดสิทธิ์รัฐช่วยจ่ายไว้ที่ขีดจำกัดสูงสุด และให้ผู้รับสิทธิจ่ายราคาส่วนต่างที่เหลือเอง",
+                textMonthlyWarn: "วงเงินสิทธิ์รายเดือนคงเหลือของคุณมีไม่เพียงพอสำหรับการหักสิทธิ์เต็มโควตา ระบบได้ช่วยจ่ายเท่าสิทธิ์รายเดือนที่เหลือของคุณทั้งหมดแล้ว",
+                
+                // ข้อมูลแท็บ
+                infoSummaryGovLabel: "ภาครัฐร่วมจ่ายสมทบ",
+                infoSummaryGovSub: "สูงสุด 200 บ./วัน",
+                infoSummaryUserLabel: "ผู้ได้รับสิทธิจ่ายเอง",
+                infoSummaryUserSub: "ผ่านแอปฯ เป๋าตัง",
+                infoPeriodTitle: "ระยะเวลากลุ่มเป้าหมายโครงการ",
+                infoPeriodSub: "ตั้งแต่วันที่ 25 พฤษภาคม ถึงวันที่ 30 กันยายน 2569",
+                infoRegCitizen: "ลงทะเบียนประชาชน:",
+                infoRegCitizenVal: "ลงทะเบียนผ่านแอปฯ เป๋าตัง วันที่ 25 - 29 พ.ค. 2569 เวลา 06:00 - 22:00 น. (จนกว่าจะครบ 30 ล้านสิทธิ์ หรือถึงวันปิดระบบ) และต้องลงทะเบียนสมัครบริการ G-Wallet ก่อนเริ่มใช้งาน",
+                infoSpendPeriod: "ช่วงเวลาใช้สิทธิ์ (ร้านค้าทั่วไป):",
+                infoSpendPeriodVal: "สแกนชำระผ่าน G-Wallet แอปฯ เป๋าตัง ได้ตั้งแต่วันที่ 1 มิ.ย. - 30 ก.ย. 2569 (06:00 - 23:00 น.) ของทุกวัน",
+                infoDelivery: "การใช้สิทธิ์ฟู้ดเดลิเวอรี:",
+                infoDeliveryVal: "สั่งผ่านพาร์ทเนอร์เดลิเวอรีที่กำหนด (Grab, LINE MAN, Robinhood, ShopeeFood) บนแอปฯ เป๋าตัง ได้ตั้งแต่วันที่ 15 มิ.ย. - 30 ก.ย. 2569 (06:00 - 21:00 น.)",
+                infoObjectiveTitle: "วัตถุประสงค์โครงการ",
+                infoObjectiveDesc: "เพื่อช่วยเหลือประชาชนซึ่งได้รับผลกระทบจากสถานการณ์วิกฤตด้านพลังงานจากสถานการณ์ความขัดแย้งในภูมิภาคตะวันออกกลาง บรรเทาภาระค่าใช้จ่ายและรักษากำลังซื้อของประชาชน รวมถึงช่วยกระตุ้นรายได้ให้แก่ผู้ประกอบการร้านค้าขนาดเล็ก และผู้ค้ากลุ่มวิสาหกิจชุมชน (SMEs) ไทยอย่างต่อเนื่อง",
+                infoBannedTitle: "รายการสินค้าและบริการยกเว้น (ไม่รวมในสิทธิ์ร่วมจ่าย)",
+                infoBannedDesc: "สิทธิ์ร่วมจ่ายจะไม่รวมถึง: สลากกินแบ่งรัฐบาล, เครื่องดื่มแอลกอฮอล์ทุกประเภท, ยาสูบ/ยาสูบทางเลือก, บัตรกำนัลทุกแบบ (Gift Voucher / Gift Card), บัตรเงินสด (Cash Card) และบริการชำระเงินล่วงหน้า (Prepaid) ทุกประเภท",
+                
+                // ข้อมูลใหม่เพิ่มเติม
+                infoEligibilityTitle: "คุณสมบัติผู้เข้าร่วมโครงการ (สำหรับประชาชน)",
+                eligible1: "มีสัญชาติไทย",
+                eligible2: "อายุตั้งแต่ 18 ปีบริบูรณ์ขึ้นไป ณ วันลงทะเบียน",
+                eligible3: "มีบัตรประจำตัวประชาชน",
+                eligible4: "ไม่เป็นผู้ถูกระงับสิทธิ์/เรียกคืนโครงการรัฐในอดีต (เช่น คนละครึ่ง ทุกเฟส)",
+                eligible5: "ไม่เป็นผู้มีบัตรสวัสดิการแห่งรัฐ (ณ วันที่ 18 พฤษภาคม 2569)",
+                
+                infoConditionsTitle: "เงื่อนไขสำคัญและการร่วมจ่าย",
+                cond1: "ต้องมีการซื้อสินค้าหรือบริการจริงตรงตามมูลค่าที่แสดงในบิลเท่านั้น (Face-to-Face)",
+                cond2: "ไม่อนุญาตให้ถอนเงินสด หรือรับแลกเปลี่ยนสินค้า/บริการคืนกลับมาเป็นเงินสด ไม่ว่าในกรณีใดๆ",
+                cond3: "ภาครัฐจะสนับสนุนเงินร่วมจ่ายเฉพาะค่าอาหารและเครื่องดื่มเท่านั้น (ไม่รวมค่าจัดส่งของเดลิเวอรี)",
+                
+                infoContactTitle: "ติดต่อสอบถามรายละเอียดโครงการ",
+                contactSource: "แหล่งที่มาอย่างเป็นทางการ:",
+                contactPhone: "เบอร์โทรศัพท์ติดต่อ:",
+                contactEmail: "อีเมลสอบถาม:",
+                
+                // ข้อความส่วนการประมวลผล
+                errPrice: "<strong>เกิดข้อผิดพลาด:</strong> กรุณากรอกราคาสินค้าหรือบริการที่ต้องการคำนวณที่มากกว่า 0 บาท",
+                errLimit: "<strong>เกิดข้อผิดพลาด:</strong> กรุณาระบุวงเงินช่วยจ่ายสูงสุดรายวันที่ถูกต้อง (เช่น 200)",
+                errMonthlyLimit: "<strong>เกิดข้อผิดพลาด:</strong> วงเงินรายเดือนต้องไม่ติดลบและสูงสุดไม่เกิน 1,000 บาท"
+            },
+            en: {
+                subTitle: "Thai Chuay Thai Plus Project (60/40)",
+                tabCalc: "Calculator",
+                tabInfo: "Information",
+                quickTerms: "<strong class='text-thai-blue'>Co-payment 60/40:</strong> Gov pays 60%, You pay 40%. Limited to <strong class='text-thai-red'>200 THB/day</strong> and 1,000 THB/month maximum.",
+                labelPrice: "Product or Service Price (THB)",
+                labelAdvanced: "Advanced Simulation Options",
+                labelLimit: "Gov Daily Cap Limit (THB)",
+                labelMonthlyLimit: "Monthly Balance Remaining (THB)",
+                btnCalculate: "Calculate Co-payment",
+                resultDivider: "60/40 Co-payment Calculation Results",
+                labelUserPays: "Citizen Pays (40%)",
+                subUserPays: "Actual amount you scan & transfer via G-Wallet on PaoTang",
+                labelGovPays: "Government Pays (60%)",
+                subGovPays: "Subsidy discount co-paid by the government",
+                labelMonthlyRemain: "Monthly limit left after this transaction:",
+                textLimitWarn: "Since the gov 60% share exceeded the daily cap, the subsidy is limited to the daily limit. You will pay the remaining difference.",
+                textMonthlyWarn: "Your monthly limit is insufficient to cover the full subsidy. The gov has contributed all of your remaining monthly balance.",
+                
+                // Info Tab
+                infoSummaryGovLabel: "Government Subsidy",
+                infoSummaryGovSub: "Max 200 THB/day",
+                infoSummaryUserLabel: "Citizen Co-payment",
+                infoSummaryUserSub: "Via PaoTang App",
+                infoPeriodTitle: "Project Timeline",
+                infoPeriodSub: "From May 25 to September 30, 2026",
+                infoRegCitizen: "Citizen Registration:",
+                infoRegCitizenVal: "Register via PaoTang app during May 25 - 29, 2026 (06:00 AM - 10:00 PM) until 30M quotas are filled. G-Wallet signup is required first.",
+                infoSpendPeriod: "Spending Window (General Stores):",
+                infoSpendPeriodVal: "Scan and pay via G-Wallet on PaoTang app from Jun 1 to Sep 30, 2026 (06:00 AM - 11:00 PM daily).",
+                infoDelivery: "Food Delivery Usage:",
+                infoDeliveryVal: "Order via designated platforms (Grab, LINE MAN, Robinhood, ShopeeFood) on PaoTang app from Jun 15 to Sep 30, 2026 (06:00 AM - 09:00 PM).",
+                infoObjectiveTitle: "Project Objective",
+                infoObjectiveDesc: "To assist citizens impacted by the energy crisis arising from Middle East tensions. The initiative alleviates daily expenses, maintains consumer purchasing power, and stimulates revenue streams for local micro-retailers and SMEs.",
+                infoBannedTitle: "Exempted Items & Services (Not eligible for co-payment)",
+                infoBannedDesc: "The co-payment excludes: Government lotteries, alcoholic beverages, tobacco/vape products, Gift Vouchers / Gift Cards, Cash Cards, and all prepaid payments.",
+                
+                // New Info Sections (EN)
+                infoEligibilityTitle: "Citizen Eligibility Criteria",
+                eligible1: "Thai nationality",
+                eligible2: "18 years of age or older on registration date",
+                eligible3: "Possess a valid Thai ID Card",
+                eligible4: "Must not be suspended or penalized in previous gov programs (e.g., Half-Half)",
+                eligible5: "Must not hold a State Welfare Card (as of May 18, 2026)",
+                
+                infoConditionsTitle: "Important Terms and Co-payment Rules",
+                cond1: "Transactions must reflect actual purchases matching the real receipt value (Face-to-Face).",
+                cond2: "Strictly prohibited from exchanging or refunding the subsidy back to physical cash in any case.",
+                cond3: "The government subsidizes food and beverages only (excludes delivery fees).",
+                
+                infoContactTitle: "Contact Information",
+                contactSource: "Official Website source:",
+                contactPhone: "Contact Phone:",
+                contactEmail: "Email Support:",
+                
+                // Validation Errors
+                errPrice: "<strong>Error:</strong> Please enter a product or service price greater than 0 THB",
+                errLimit: "<strong>Error:</strong> Please enter a valid daily cap limit (e.g., 200)",
+                errMonthlyLimit: "<strong>Error:</strong> Monthly limit cannot be negative and cannot exceed 1,000 THB"
+            }
+        };
+
+        // กำหนดภาษาเริ่มต้น
+        let currentLanguage = 'th';
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            
+            // อัปเดตปุ่มสวิตช์ภาษา (สถานะ Active)
+            const btnTh = document.getElementById('lang-th');
+            const btnEn = document.getElementById('lang-en');
+            if (lang === 'th') {
+                btnTh.className = "px-3 py-1 text-xs font-bold rounded-full transition-all bg-thai-red text-white shadow-sm";
+                btnEn.className = "px-3 py-1 text-xs font-bold rounded-full transition-all text-white hover:bg-white/10";
+            } else {
+                btnTh.className = "px-3 py-1 text-xs font-bold rounded-full transition-all text-white hover:bg-white/10";
+                btnEn.className = "px-3 py-1 text-xs font-bold rounded-full transition-all bg-thai-red text-white shadow-sm";
+            }
+
+            // แปลส่วนหัวข้อต่างๆ
+            document.getElementById('sub-title').innerText = translations[lang].subTitle;
+            document.getElementById('tab-calc-text').innerText = translations[lang].tabCalc;
+            document.getElementById('tab-info-text').innerText = translations[lang].tabInfo;
+            document.getElementById('quick-terms').innerHTML = translations[lang].quickTerms;
+            document.getElementById('label-price').innerText = translations[lang].labelPrice;
+            document.getElementById('label-advanced').innerHTML = document.getElementById('label-advanced').innerHTML.replace(/<\/svg>.*/, '<\/svg> ' + translations[lang].labelAdvanced);
+            document.getElementById('label-limit').innerText = translations[lang].labelLimit;
+            document.getElementById('label-monthly-limit').innerText = translations[lang].labelMonthlyLimit;
+            document.getElementById('btn-calculate').querySelector('span').innerText = translations[lang].btnCalculate;
+            
+            // แปลส่วนแสดงผลลัพธ์
+            document.getElementById('result-divider').innerText = translations[lang].resultDivider;
+            document.getElementById('label-userPays').innerText = translations[lang].labelUserPays;
+            document.getElementById('sub-userPays').innerText = translations[lang].subUserPays;
+            document.getElementById('label-govPays').innerText = translations[lang].labelGovPays;
+            document.getElementById('sub-govPays').innerText = translations[lang].subGovPays;
+            document.getElementById('label-monthlyRemain').innerText = translations[lang].labelMonthlyRemain;
+            document.getElementById('text-limit-warn').innerText = translations[lang].textLimitWarn;
+            document.getElementById('text-monthly-warn').innerText = translations[lang].textMonthlyWarn;
+
+            // แปลในแท็บข้อมูลโครงการ
+            document.getElementById('info-summary-gov-label').innerText = translations[lang].infoSummaryGovLabel;
+            document.getElementById('info-summary-gov-sub').innerText = translations[lang].infoSummaryGovSub;
+            document.getElementById('info-summary-user-label').innerText = translations[lang].infoSummaryUserLabel;
+            document.getElementById('info-summary-user-sub').innerText = translations[lang].infoSummaryUserSub;
+            
+            // คัดกรองคุณสมบัติ
+            document.getElementById('info-eligibility-title').innerHTML = document.getElementById('info-eligibility-title').innerHTML.replace(/<\/svg>.*/, '<\/svg> ' + translations[lang].infoEligibilityTitle);
+            document.getElementById('eligible-1').innerText = translations[lang].eligible1;
+            document.getElementById('eligible-2').innerText = translations[lang].eligible2;
+            document.getElementById('eligible-3').innerText = translations[lang].eligible3;
+            document.getElementById('eligible-4').innerText = translations[lang].eligible4;
+            document.getElementById('eligible-5').innerText = translations[lang].eligible5;
+
+            // ระยะเวลา
+            document.getElementById('info-period-title').innerText = translations[lang].infoPeriodTitle;
+            document.getElementById('info-period-sub').innerText = translations[lang].infoPeriodSub;
+            document.getElementById('info-reg-citizen').innerText = translations[lang].infoRegCitizen;
+            document.getElementById('info-reg-citizen-val').innerText = translations[lang].infoRegCitizenVal;
+            document.getElementById('info-spend-period').innerText = translations[lang].infoSpendPeriod;
+            document.getElementById('info-spend-period-val').innerText = translations[lang].infoSpendPeriodVal;
+            document.getElementById('info-delivery').innerText = translations[lang].infoDelivery;
+            document.getElementById('info-delivery-val').innerText = translations[lang].infoDeliveryVal;
+            
+            // วัตถุประสงค์
+            document.getElementById('info-objective-title').innerHTML = document.getElementById('info-objective-title').innerHTML.replace(/<\/svg>.*/, '<\/svg> ' + translations[lang].infoObjectiveTitle);
+            document.getElementById('info-objective-desc').innerText = translations[lang].infoObjectiveDesc;
+
+            // เงื่อนไขและของต้องห้าม
+            document.getElementById('info-conditions-title').innerHTML = document.getElementById('info-conditions-title').innerHTML.replace(/<\/svg>.*/, '<\/svg> ' + translations[lang].infoConditionsTitle);
+            document.getElementById('cond-1').innerText = translations[lang].cond1;
+            document.getElementById('cond-2').innerText = translations[lang].cond2;
+            document.getElementById('cond-3').innerText = translations[lang].cond3;
+
+            document.getElementById('info-banned-title').innerHTML = document.getElementById('info-banned-title').innerHTML.replace(/<\/svg>.*/, '<\/svg> ' + translations[lang].infoBannedTitle);
+            document.getElementById('info-banned-desc').innerText = translations[lang].infoBannedDesc;
+
+            // ข้อมูลติดต่อ
+            document.getElementById('info-contact-title').innerHTML = document.getElementById('info-contact-title').innerHTML.replace(/<\/svg>.*/, '<\/svg> ' + translations[lang].infoContactTitle);
+            document.getElementById('contact-source').innerText = translations[lang].contactSource;
+            document.getElementById('contact-phone').innerText = translations[lang].contactPhone;
+            document.getElementById('contact-email').innerText = translations[lang].contactEmail;
+
+            // รีเซ็ตล้างผลการประมวลผลเมื่อผู้ใช้สลับภาษา
+            document.getElementById('errorBox').classList.add('hidden');
+            document.getElementById('result').classList.add('hidden');
+        }
+
+        // ฟังก์ชันสลับแท็บ
+        function switchTab(tabId) {
+            const calcTab = document.getElementById('calc-tab');
+            const infoTab = document.getElementById('info-tab');
+            const btnCalc = document.getElementById('btn-calc');
+            const btnInfo = document.getElementById('btn-info');
+
+            if (tabId === 'calc-tab') {
+                calcTab.classList.remove('hidden');
+                infoTab.classList.add('hidden');
+                btnCalc.classList.add('active-tab');
+                btnInfo.classList.remove('active-tab');
+            } else {
+                calcTab.classList.add('hidden');
+                infoTab.classList.remove('hidden');
+                btnCalc.classList.remove('active-tab');
+                btnInfo.classList.add('active-tab');
+            }
+        }
+
+        // ฟังก์ชันคำนวณสิทธิ์
+        function calculate() {
+            const priceInput = document.getElementById('price');
+            const limitInput = document.getElementById('limit');
+            const monthlyLimitInput = document.getElementById('monthly-limit');
+            
+            const errorBox = document.getElementById('errorBox');
+            const resultBox = document.getElementById('result');
+            const limitWarning = document.getElementById('limitWarning');
+            const monthlyWarning = document.getElementById('monthlyWarning');
+            const monthlyStatusBlock = document.getElementById('monthlyStatusBlock');
+
+            // แปลงค่าอินพุต
+            const price = parseFloat(priceInput.value);
+            const limit = parseFloat(limitInput.value);
+            const monthlyLimit = parseFloat(monthlyLimitInput.value);
+
+            // รีเซ็ตแจ้งเตือน
+            errorBox.classList.add('hidden');
+            resultBox.classList.add('hidden');
+            limitWarning.classList.add('hidden');
+            monthlyWarning.classList.add('hidden');
+            monthlyStatusBlock.classList.add('hidden');
+
+            // ตรวจสอบความถูกต้องของข้อมูล (เปลี่ยนตามภาษาที่เลือก)
+            if (isNaN(price) || price <= 0) {
+                errorBox.innerHTML = translations[currentLanguage].errPrice;
+                errorBox.classList.remove('hidden');
+                priceInput.focus();
+                return;
+            }
+
+            if (isNaN(limit) || limit < 0) {
+                errorBox.innerHTML = translations[currentLanguage].errLimit;
+                errorBox.classList.remove('hidden');
+                limitInput.focus();
+                return;
+            }
+
+            if (isNaN(monthlyLimit) || monthlyLimit < 0 || monthlyLimit > 1000) {
+                errorBox.innerHTML = translations[currentLanguage].errMonthlyLimit;
+                errorBox.classList.remove('hidden');
+                monthlyLimitInput.focus();
+                return;
+            }
+
+            // คำนวณเบื้องต้น 60% ที่ภาครัฐบาลจ่ายสมทบ
+            let govShare = price * 0.60;
+            let dayLimitTriggered = false;
+            let monthLimitTriggered = false;
+
+            // ตรวจสอบวงเงินช่วยจ่ายรายวันสูงสุด (เพดาน 200 บาท)
+            if (govShare > limit) {
+                govShare = limit;
+                dayLimitTriggered = true;
+            }
+
+            // ตรวจสอบกับวงเงินคงเหลือของเดือนนั้นๆ
+            if (govShare > monthlyLimit) {
+                govShare = monthlyLimit;
+                monthLimitTriggered = true;
+            }
+
+            // คำนวณราคาส่วนต่างประชาชนจ่ายจริง (40% + ยอดล้นโควตา)
+            let userShare = price - govShare;
+
+            // คำนวณความคงเหลือรายเดือนหลังใช้สิทธิ์ครั้งนี้
+            let monthlyRemaining = monthlyLimit - govShare;
+
+            // จัดฟอร์แมตตัวเลขแสดงผล
+            const formatNumber = (num) => {
+                return num.toLocaleString(currentLanguage === 'th' ? 'th-TH' : 'en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            };
+
+            // อัปเดตผลลัพธ์ลง UI
+            document.getElementById('userPays').innerText = formatNumber(userShare) + ' ฿';
+            document.getElementById('govPays').innerText = formatNumber(govShare) + ' ฿';
+
+            // จัดแสดงข้อความเงื่อนไขขีดจำกัด
+            if (dayLimitTriggered && !monthLimitTriggered) {
+                limitWarning.classList.remove('hidden');
+            }
+            if (monthLimitTriggered) {
+                monthlyWarning.classList.remove('hidden');
+            }
+
+            // จัดการข้อมูลคงเหลือรายเดือน
+            document.getElementById('monthlyRemain').innerText = formatNumber(monthlyRemaining) + ' ฿';
+            const percentRemaining = (monthlyRemaining / 1000) * 100;
+            document.getElementById('monthlyBar').style.width = percentRemaining + '%';
+            monthlyStatusBlock.classList.remove('hidden');
+
+            // เปิดแสดงกล่องผลลัพธ์
+            resultBox.classList.remove('hidden');
+        }
+
+        // รองรับการทำงานผ่านการกด Enter บนคีย์บอร์ด
+        document.getElementById('price').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                calculate();
+            }
+        });
+    </script>
+</body>
+</html>
